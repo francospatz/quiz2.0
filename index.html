@@ -14,18 +14,23 @@
 </head>
 <body>
     <div class="main-container">
-        <section id="principal">
+        <div id="fake-nav"></div>
+        <section class="principal">
             <div id="logo-title">
                 <img src="./assets/img/quiz.png" alt="" id="logo">
                 <h2 id="title">Saber y perder</h2>
             </div>
+            <form action="" id="logIn-form">
+                <input type="email" name="email" id="emailLogIn" placeholder="email"  class="inputs">
+                <input type="password" name="password" id="passwordLogIn" placeholder="contraseña" class="inputs">
+                <input type="submit" value="Login" class="btn-1" id="logIn-btn">
+            </form>
             
-            <a href="" class="btn-1">Login</a>
-            <p>Aqui quien sabe pierde</p>
+            <a href="./pages/signUp.html"><p>Registrate</p></a>
         </section>
     </div>
   
 
-    <script src="./JS/script.js"></script>
+    <script src="../JS/script.js" type="module"></script>
 </body>
 </html>
