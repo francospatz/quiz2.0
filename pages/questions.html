@@ -4,11 +4,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./CSS/style.css">
-    <title>Home</title>
+    <link rel="stylesheet" href="../CSS/normalize.css">
+    <link rel="stylesheet" href="../CSS/style.css">
+    <title>Questions</title>
+    
 </head>
 <body>
-    
+    <div class="main-container">
+        <header>
+            <img src="../assets/img/quiz.png" alt="" id="logo" >
+            <nav id="nav">
+                <h5>User name</h5>
+               <img src="../assets/img/default_user_icon.png" alt=""> 
+               <a href="../index.html" class="btn-2" id="logOut">Logout</a>
+            </nav>
+        </header>
+        <div class="principal2">
+            <form action="" id="questions">
+                <div id="questoion-div">
+                    <h4> Pregunta numero  1</h4>
+                </div>
+                <div id="options-div">
+
+                    <label for="opt1">primera opcion</label>
+                    <input type="radio" name="options" id="opt1" >
+     
+                    <label for="opt2">segunda opcion</label>
+                    <input type="radio" name="options" id="opt2" >
+     
+                    <label for="opt3">tercera opcion</label>
+                    <input type="radio" name="options" id="opt3" >
+     
+                    <label for="opt4">cuarta opcion</label>
+                    <input type="radio" name="options" id="opt4" >
+                </div>
+               
+                   
+            </form>
+        </div>
+    </div>
 
     <script src="./JS/script.js"></script>
 </body>
