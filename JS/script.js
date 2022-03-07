@@ -13,7 +13,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -35,7 +35,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth();
-const db = getDatabase();
+const db = getFirestore(app)
 
 //Selector boton signUp
 
@@ -53,14 +53,6 @@ function checkEmail(email) {
 function checkPassword(password) {
   const passRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/;
-
-  //1. que incluya un carácter a-z
-  //2. que incluya un carácter A-Z en cualquier posicion
-  //3. que inlcuya un digito en cualquier posicion
-  //4. que inlcuya un simbolo de los especificados
-  //5. carácteres permitidos
-  //6. longitud contraseña
-
   return passRegex.test(password);
 }
 
@@ -83,19 +75,18 @@ if (signUp != null) {
             .then((userCredential) => {
               // Signed in
               const user = userCredential.user;
-              let userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
-              let setWithMerge = userRef.set({
-                  username: usernameSignUp,
-                  email: emailSignUp
-              }, {merge: true});
-
+              createUserFS(usernameSignUp, emailSignUp);
               alert("user created");
+              location.replace("./questions.html");
             })
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
               alert(errorMessage);
             });
+
+            /* location.replace("./questions.html"); */
+
         } else if (passwordSignUp != passwordSignUp2) {
             alert("las contraseñas no coinciden");
         } else {
@@ -103,7 +94,18 @@ if (signUp != null) {
         }
       });
 }
- 
+
+async function createUserFS (username, email) {
+  try {
+    const docRef = await addDoc(collection(db, "users"), {
+      username: username,
+      email: email,
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
 
 
 //Función para hacer log in
@@ -123,11 +125,10 @@ if (logIn != null) {
             const user = userCredential.user;
             const date = new Date();
       
-            update(ref(database, "users/" + user.uid), {//escribe en la BBDD
-              last_login: date,
-            });
       
             alert("User logged in!");
+            location.replace("./pages/questions.html");
+            document.getElementById("innerUsername").innerHTML = emailLogIn;
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -144,12 +145,13 @@ const logOut = document.getElementById("logOut");
 // **********************************************************
 // LOG OUT
 
-/* logOut.addEventListener("click", (e) => {
+logOut.addEventListener("click", (e) => {
   e.preventDefault();
 
   signOut(auth)
     .then(() => {
       alert("Sign out successful");
+      location.replace("index.html");
 
 
     })
@@ -158,7 +160,7 @@ const logOut = document.getElementById("logOut");
       const errorMessage = error.message;
       alert(errorMessage);
     });
-}); */
+});
 
 
 
