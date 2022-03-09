@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./CSS/style.css">
-    <link rel="stylesheet" href="./CSS/normalize.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./CSS/style.css" />
+    <link rel="stylesheet" href="./CSS/normalize.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
     <title>Quiz 2.0</title>
-
-</head>
-<body>
-    <div class="main-container">
+  </head>
+  <body>
+    <main>
+      <div class="main-container">
         <div id="fake-nav"></div>
         <section class="principal">
-            <div id="logo-title">
-                <img src="./assets/img/quiz.png" alt="" id="logo">
-                <h2 id="title">Saber y perder</h2>
-            </div>
-            <form action="" id="logIn-form">
-                <input type="email" name="email" id="emailLogIn" placeholder="email"  class="inputs">
-                <input type="password" name="password" id="passwordLogIn" placeholder="contraseña" class="inputs">
-                <input type="submit" value="Login" class="btn-1" id="logIn-btn">
-            </form>
-            
-            <a href="./pages/signUp.html"><p>Registrate</p></a>
+          <div id="logo-title">
+            <img src="./assets/img/quiz.png" alt="" id="logo" />
+            <h2 id="title">Saber y perder</h2>
+          </div>
+          <button class="btn-1" id="googleLogin">
+            <img src="../assets/img/google.png" alt="" class="icon" />Login with
+            Google
+          </button>
         </section>
-    </div>
-  
-    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
-    <script src="../JS/script.js" type="module"></script>
-</body>
+      </div>
+    </main>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-auth-compat.js"></script>
+    <script src="./JS/login.js" type="module"></script>
+  </body>
 </html>
