@@ -68,7 +68,10 @@ let gameDates = [];
 onAuthStateChanged(auth, (user) => {
     if (user) {
       let username = document.getElementById("username");
-      username.innerHTML = `${user.displayName}`;
+      if (username != null) {
+        username.innerHTML = `${user.displayName}`;
+      }
+     
       let uid = user.uid;
       // ...
     } else {
@@ -78,7 +81,7 @@ onAuthStateChanged(auth, (user) => {
         }
         
     }
-  });
+});
 
 // Botón login
 const googleLogin = document.getElementById("googleLogin");
