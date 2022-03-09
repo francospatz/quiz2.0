@@ -12,9 +12,17 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
 } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
-import { getFirestore, doc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
-
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+} from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -33,12 +41,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-const auth = getAuth();
-const db = getFirestore(app)
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new firebase.auth.GoogleAuthProvider();
 
 //Selector boton signUp
-
 
 // *****************************************************************
 // Validación de la contraseña
@@ -56,46 +63,77 @@ function checkPassword(password) {
   return passRegex.test(password);
 }
 
+const googleSignUp = document.getElementById("google");
+
 const signUp = document.getElementById("form_SingUp");
 
+googleSignUp.addEventListener("submit",  async (e) => {
+  e.preventDefault();
+  const auth = getAuth();
+  signInWithRedirect(auth, provider);
+  
+  getRedirectResult(auth)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access Google APIs.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+
+      // The signed-in user info.
+      const user = result.user;
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
+});
+
 if (signUp != null) {
+ 
 
-    signUp.addEventListener("submit", (e) => {
-        e.preventDefault();
-      
-        let usernameSignUp = document.getElementById("usernameSignUp").value;
-        let emailSignUp = document.getElementById("emailSignUp").value;
-        let passwordSignUp = document.getElementById("passwordSignUp").value;
-        let passwordSignUp2 = document.getElementById("passwordSignUp2").value;
-        
-       
-      //Valida password con pasword 2 y Regex y crea usuario si son válidos
-        if (checkPassword(passwordSignUp) && checkEmail(emailSignUp) && passwordSignUp == passwordSignUp2) {
-          createUserWithEmailAndPassword(auth, emailSignUp, passwordSignUp) //metodo importado, ver encabezado. Funcion asincrona
-            .then((userCredential) => {
-              // Signed in
-              const user = userCredential.user;
-              createUserFS(usernameSignUp, emailSignUp);
-              alert("user created");
-              location.replace("./questions.html");
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              alert(errorMessage);
-            });
+  signUp.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-            /* location.replace("./questions.html"); */
+    let usernameSignUp = document.getElementById("usernameSignUp").value;
+    let emailSignUp = document.getElementById("emailSignUp").value;
+    let passwordSignUp = document.getElementById("passwordSignUp").value;
+    let passwordSignUp2 = document.getElementById("passwordSignUp2").value;
 
-        } else if (passwordSignUp != passwordSignUp2) {
-            alert("las contraseñas no coinciden");
-        } else {
-            alert("Introduzca email y/o contraseña válidos");
-        }
-      });
+    //Valida password con pasword 2 y Regex y crea usuario si son válidos
+    if (
+      checkPassword(passwordSignUp) &&
+      checkEmail(emailSignUp) &&
+      passwordSignUp == passwordSignUp2
+    ) {
+      createUserWithEmailAndPassword(auth, emailSignUp, passwordSignUp) //metodo importado, ver encabezado. Funcion asincrona
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          createUserFS(usernameSignUp, emailSignUp);
+          alert("user created");
+          location.replace("./questions.html");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert(errorMessage);
+        });
+
+      /* location.replace("./questions.html"); */
+    } else if (passwordSignUp != passwordSignUp2) {
+      alert("las contraseñas no coinciden");
+    } else {
+      alert("Introduzca email y/o contraseña válidos");
+    }
+  });
 }
 
-async function createUserFS (username, email) {
+async function createUserFS(username, email) {
   try {
     const docRef = await addDoc(collection(db, "users"), {
       username: username,
@@ -107,44 +145,39 @@ async function createUserFS (username, email) {
   }
 }
 
-
 //Función para hacer log in
 const logIn = document.getElementById("logIn-form");
 
 if (logIn != null) {
+  logIn.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let emailLogIn = document.getElementById("emailLogIn").value;
+    let passwordLogIn = document.getElementById("passwordLogIn").value;
 
-    logIn.addEventListener("submit", (e) => {
-        e.preventDefault();
-        let emailLogIn = document.getElementById("emailLogIn").value;
-        let passwordLogIn = document.getElementById("passwordLogIn").value;
-      
-        //metodo de Firebase para hacer log in
-        signInWithEmailAndPassword(auth, emailLogIn, passwordLogIn)
-          .then((userCredential) => {
-            // Logged in
-            const user = userCredential.user;
-            const date = new Date();
-      
-      
-            alert("User logged in!");
-            location.replace("./pages/questions.html");
-            document.getElementById("innerUsername").innerHTML = emailLogIn;
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            //alert(errorMessage);
-          });
+    //metodo de Firebase para hacer log in
+    signInWithEmailAndPassword(auth, emailLogIn, passwordLogIn)
+      .then((userCredential) => {
+        // Logged in
+        const user = userCredential.user;
+        const date = new Date();
+
+        alert("User logged in!");
+        location.replace("./pages/questions.html");
+        document.getElementById("innerUsername").innerHTML = emailLogIn;
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        //alert(errorMessage);
       });
+  });
 }
-
-
 
 const logOut = document.getElementById("logOut");
 
 // **********************************************************
 // LOG OUT
-
+/* 
 logOut.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -162,7 +195,7 @@ logOut.addEventListener("click", (e) => {
     });
 });
 
-
+ */
 
 // ************************************************************************
 
