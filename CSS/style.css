@@ -79,6 +79,19 @@ input[type="email"] {
   border-radius: 8px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
+.principal3 {
+  background-color: aliceblue;
+  height: 85%;
+  width: 85%;
+  margin-top: 0.5em;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .btn-1 {
   text-decoration: none;
   color: white;
@@ -101,10 +114,10 @@ input[type="email"] {
 /* ----------------------------SIGN UP PAGE -------------------------------------------------*/
 header {
   width: 100%;
-  height: 8%;
-  border-radius: 0px 0px 8px 8px;
+  height: 10%;
+  /* border-radius: 0px 0px 8px 8px; */
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background-color: aliceblue;
@@ -121,13 +134,14 @@ header > img {
 }
 header > nav {
   width: 80%;
-  height: 100%;
-  border-radius: 8px;
+  /* border-radius: 8px; */
+  margin-right: 2em;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
   overflow: hidden;
+ 
 }
 .principal > form > h4 {
   margin: 1em;
@@ -151,10 +165,11 @@ header > nav > img {
 .btn-2 {
   background-color: #764ba2;
   color: white;
-  padding: 2.5% 5%;
+  padding: 1em 2em;
   margin-left: 1em;
   border-radius: 8px;
   font-size: small;
+  cursor: pointer;
 }
 .principal2 {
   height: 85%;
@@ -182,10 +197,11 @@ header > nav > img {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   width: 100%;
   height: 20%;
   border-radius: 8px;
-  background-color: #eff2ff;
+  background-color: #fafbff;
   color: #242424;
 }
 label {
@@ -194,20 +210,102 @@ label {
   align-items: center;
   background-color: #ffffff;
   width: 90%;
-  padding: 0.5em 0.5em;
+  height: 20%;
+  /* padding: 0.5em 0.5em; */
   margin: 0.5em;
   border-radius: 8px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   color: #5a5a5a;
+  transition: all 0.4s ease-in-out;
+}
+label:hover {
+  background-color: #a130e2;
+  border: 1px solid white;
+  color: whitesmoke;
 }
 input[type="radio"] {
   display: none;
 }
 #options-div {
-  /* background-color: #fc00ff; */
+  /* background-color: #fc00ff;  */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   width: 100%;
   height: 80%;
+}
+.mensaje{
+ 
+  width: 95%;
+  height: 85%;
+  background-color: #ffffff;
+  z-index : 50;
+  position: absolute;
+  border-radius: 8px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction:column;
+  color: rgb(109, 8, 168);
+  transition: all 2s linear;
+  
+}
+.mensaje{
+  text-align: center;
+  font-size: 30px;
+}
+
+
+#score {
+  font-size: 100px;
+}
+.hide{
+  display: none;
+  opacity: 0;
+}
+.correcta {
+  border: 2px solid rgb(51, 245, 116);
+}
+.incorrecta {
+  border: 2px solid rgb(245, 51, 83);
+}
+/*----------------MEDIA-QUERYS---------------------  */
+@media only screen and (min-width: 700px) {
+  .principal2 {
+    width: 60%;
+  }
+  .principal3 {
+    width:40%;
+  }
+  .options-div{
+    background-color: #00dbde;
+  }
+  label {
+  width: 40%;
+  height: 5em;
+  padding: 0.5em 0.5em;
+  margin: 0.5em;
+  border-radius: 8px;
+  
+  }
+  #questions {
+    width: 100%;
+    height: 100%;
+   /* background-color: #de0068;  */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+ #options-div{
+    width:100%;
+    height: 20%;
+    margin-bottom: 4em;
+  }
+  #questions>#questoion-div{
+    height:40%;
+    /* background-color: #00dbde; */
+  }
 }

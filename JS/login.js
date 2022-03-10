@@ -17,34 +17,44 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const db = getFirestore();
 
-async function login () {
+let date = new Date();
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+let today = "";
+
+if(month < 10){
+    today = `${day}-0${month}-${year}`;
+  console.log(`${day}-0${month}-${year}`);
+}else{
+    today = `${day}-${month}-${year}`;
+  console.log(`${day}-${month}-${year}`);
+}
+
+let currentUserEmail;
+
+async function login() {
     signInWithPopup(auth, provider)
         .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        createUserFS(user);
-        window.location.href="./pages/home.html";
-        
-        
-    }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-    });
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            console.log(user);
+            createUserFS(user);
+            window.location.href = "./pages/home.html";
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            console.log(errorCode);
+        });
     await setPersistence(auth, browserLocalPersistence);
 }
 
 // Crea el usuario en Firestore (o no)
-async function createUserFS (user) {
+async function createUserFS(user) {
     const docData = {
         displayName: user.displayName,
         email: user.email
@@ -53,35 +63,33 @@ async function createUserFS (user) {
 }
 
 // Función para logout
-async function logout () {
+async function logout() {
     signOut(auth).then(() => {
-        window.location.href="/index.html";
-      }).catch((error) => {
+        window.location.href = "/index.html";
+    }).catch((error) => {
         console.log(error)
-      });
+    });
 }
-
-let gameScores = [];
-let gameDates = [];
 
 // Observador del estado de la sesión
 onAuthStateChanged(auth, (user) => {
     if (user) {
-      let username = document.getElementById("username");
-      if (username != null) {
-        username.innerHTML = `${user.displayName}`;
-      }
-     
-      let uid = user.uid;
-      // ...
+        let username = document.getElementById("username");
+        if (username != null) {
+            username.innerHTML = `${user.displayName}`;
+        }
+        currentUserEmail = user.email;
+        console.log(currentUserEmail);
+        let uid = user.uid;
+        // ...
     } else {
         if (document.getElementById("username") != null) {
             let username = document.getElementById("username");
             username.innerHTML = "";
         }
-        
+
     }
-});
+})
 
 // Botón login
 const googleLogin = document.getElementById("googleLogin");
@@ -89,7 +97,7 @@ const googleLogin = document.getElementById("googleLogin");
 if (googleLogin != null) {
     googleLogin.addEventListener("click", async () => {
         try {
-            await login ();
+            await login();
         } catch (error) {
             console.log(error);
         }
@@ -102,9 +110,10 @@ const googleLogout = document.getElementById("googleLogout");
 if (googleLogout != null) {
     googleLogout.addEventListener("click", async () => {
         try {
-            await logout ();
+            await logout();
         } catch (error) {
             console.log(error);
         }
     });
 }
+

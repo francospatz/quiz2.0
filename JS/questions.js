@@ -3,12 +3,13 @@ import {
     getAuth,
     GoogleAuthProvider,
     onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 import {
     getFirestore,
     collection,
     addDoc,
-    getDocs,
+    getDoc,
     setDoc,
     doc,
     updateDoc,
@@ -35,6 +36,25 @@ let options = document.querySelectorAll(".choices");
 let label = document.querySelectorAll("label");
 let enunciado = quizForm.querySelector("#enunciado");
 const questions = [];
+let currentUser;
+let currentUserEmail;
+let mensaje = document.querySelector(".mensaje")
+
+
+let date = new Date();
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+let today;
+
+if(month < 10){
+    today = `${day}-0${month}-${year}`;
+  console.log(`${day}-0${month}-${year}`);
+}else{
+    today = `${day}-${month}-${year}`;
+  console.log(`${day}-${month}-${year}`);
+}
 
 let i = 0;
 let correctas = 0;
@@ -67,6 +87,7 @@ getQuestions().then(function () {
         label[2].innerHTML = `${questions[inc].listQuest[rand[2]]}`;
         label[3].innerHTML = `${questions[inc].listQuest[rand[3]]}`;
     }
+    
     printoptions(i);
     quizForm.addEventListener("click", function (e) {
         e.preventDefault();
@@ -78,46 +99,132 @@ getQuestions().then(function () {
             printitulo(i);
             printoptions(i);
         } else {
-            alert("Terminaste");
-            updateScore(correctas);
+            // alert("Terminaste");
+            message();
+            getScores(auth.currentUser);
+            //gamesArray(auth.currentUser);
         }
     });
+
     for (let i = 0; i < label.length; i++) {
         label[i].onclick = respuestas;
     }
+
     function respuestas() {
         for (let i = 0; i < 10; i++) {
             if (this.innerHTML == questions[i].correcta) {
-                alert("correcta");
+                //alert("correcta");
                 correctas++;
             }
         }
     }
 });
-/* 
-async function updateScore (num) {
-    const scoresRef = doc(db, "users", usuario, "gameScores");
-    const scoresSnap = await getDocs(scoresRef);
-    if (scoresSnap.exists()) {
-        let data = scoresSnap.data();
-        data.push(num);
-        await setDoc(doc(scoresSnap)), {
-            gameScores: data
-        }
-    }
+
+
+
+async function getScores (user) {
+    let datesArray = [];
+    let gameScoreArray = [];
+
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
     
-}; */
+    if (docSnap.exists()) {
+        datesArray = docSnap.data().dates;
+        gameScoreArray = docSnap.data().gameScore;
+        gamesArray(auth.currentUser, datesArray, gameScoreArray);
 
+    } else {
+        datesArray.push(today);
+        gameScoreArray.push(correctas);
 
-let usuario;
+        const game = doc(db, "users", user.uid);
+        await updateDoc(game, {
+        displayName: user.displayName,
+        email: user.email,
+        dates: datesArray,
+        gameScore: gameScoreArray
+        })
+    }
+}
+
+async function gamesArray (user, dates, games) {
+    let gamesU = games;
+    let datesU = dates;
+    
+    datesU.push(today);
+    gamesU.push(correctas);
+
+    const game = doc(db, "users", user.uid);
+    await setDoc(game, {
+        displayName: user.displayName,
+        email: user.email,
+        dates: datesU,
+        gameScore: gamesU
+    })
+}
+
+/* let docData;
+let lastScore;
+async function updateScore(score) {
+    onAuthStateChanged(auth, (u) => {
+        if (u) {
+            currentUser = u;
+            docData = {
+                email: u.email,
+                score: score,
+                date: today
+            }
+            lastScore = score;
+            changesFS();
+            
+        }
+    })
+}
+
+async function updateLastScore (s) {
+    let score = s;
+    onAuthStateChanged(auth, (u) => {
+        if(u) {
+            let id = u;
+            setLastScore(score, id);
+        }
+    });
+} 
+
+async function changesFS () {
+    await addDoc(collection(db, "gamesRegister"), docData);
+    printScore(correctas);
+} */
+
+function message() {
+    const FScore = document.getElementById("finalScore");
+    const msg = document.getElementById("msg")
+    mensaje.style.display = "block";
+    if (correctas<5) {
+        msg.innerHTML="You Johnny 'Weak'"
+        FScore.innerHTML = correctas + " /10";
+    } else if (correctas>=5 && correctas <8) {
+        msg.innerHTML="You 'Beyon' C "
+        FScore.innerHTML = correctas + " /10";
+    } else {
+        msg.innerHTML="You 'The Rock' "
+        FScore.innerHTML = correctas + " /10";
+    }
+ 
+}
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
         let username = document.getElementById("username");
-        usuario = user;
+        let usuario = user;
 
         if (username != null) {
             username.innerHTML = `${user.displayName}`;
-            
+            currentUser = user;
+            currentUserEmail = user.email;
+            console.log(user.uid)
+            console.log(currentUserEmail);
         }
 
         let uid = user.uid;
@@ -130,6 +237,14 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+async function logout() {
+    signOut(auth).then(() => {
+        window.location.href = "/index.html";
+    }).catch((error) => {
+        console.log(error)
+    });
+}
+
 const googleLogout = document.getElementById("googleLogout");
 
 if (googleLogout != null) {
@@ -141,3 +256,16 @@ if (googleLogout != null) {
         }
     });
 }
+
+
+// final score
+function printScore (points) {
+    const finalScore = document.getElementById("score");
+
+    if (finalScore != null) {
+        finalScore.innerHTML = points + "/10"
+    }
+
+}
+
+
