@@ -120,82 +120,28 @@ getQuestions().then(function () {
     }
 });
 
-
-
+// Actualizar el historial de partidas en firestore
 async function getScores (user) {
     let datesArray = [];
     let gameScoreArray = [];
 
     const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(docRef);
+
+    datesArray = docSnap.data().dates;
+    datesArray.push(today);
+
+    gameScoreArray = docSnap.data().gameScore;
+    gameScoreArray.push(correctas);
     
-    if (docSnap.exists()) {
-        datesArray = docSnap.data().dates;
-        gameScoreArray = docSnap.data().gameScore;
-        gamesArray(auth.currentUser, datesArray, gameScoreArray);
-
-    } else {
-        datesArray.push(today);
-        gameScoreArray.push(correctas);
-
-        const game = doc(db, "users", user.uid);
-        await updateDoc(game, {
+    await setDoc(doc(db, "users", user.uid), {
         displayName: user.displayName,
         email: user.email,
         dates: datesArray,
         gameScore: gameScoreArray
-        })
-    }
-}
-
-async function gamesArray (user, dates, games) {
-    let gamesU = games;
-    let datesU = dates;
-    
-    datesU.push(today);
-    gamesU.push(correctas);
-
-    const game = doc(db, "users", user.uid);
-    await setDoc(game, {
-        displayName: user.displayName,
-        email: user.email,
-        dates: datesU,
-        gameScore: gamesU
     })
 }
 
-/* let docData;
-let lastScore;
-async function updateScore(score) {
-    onAuthStateChanged(auth, (u) => {
-        if (u) {
-            currentUser = u;
-            docData = {
-                email: u.email,
-                score: score,
-                date: today
-            }
-            lastScore = score;
-            changesFS();
-            
-        }
-    })
-}
-
-async function updateLastScore (s) {
-    let score = s;
-    onAuthStateChanged(auth, (u) => {
-        if(u) {
-            let id = u;
-            setLastScore(score, id);
-        }
-    });
-} 
-
-async function changesFS () {
-    await addDoc(collection(db, "gamesRegister"), docData);
-    printScore(correctas);
-} */
 
 function message() {
     const FScore = document.getElementById("finalScore");

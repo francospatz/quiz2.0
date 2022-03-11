@@ -42,24 +42,38 @@ async function login() {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
-            console.log(user);
+            //console.log(user);
             createUserFS(user);
-            window.location.href = "./pages/home.html";
+            
         }).catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
             console.log(errorCode);
         });
     await setPersistence(auth, browserLocalPersistence);
+    
 }
 
-// Crea el usuario en Firestore (o no)
+// Crea el usuario en Firestore si no existe todavía
+let everyUser = [];
 async function createUserFS(user) {
-    const docData = {
+    const docData2 = {
         displayName: user.displayName,
-        email: user.email
+        email: user.email,
+        gameScore: [],
+        dates: []
     }
-    await setDoc(doc(db, "users", user.uid), docData);
+
+    const allUsers = await getDocs(collection(db, "users"));
+    allUsers.forEach((u) => {
+        everyUser.push(u.id);
+    })
+    console.log(everyUser);
+    //console.log(allUsers);
+    if (everyUser.includes(user.uid) == false) {
+        await setDoc(doc(db, "users", user.uid), docData2);
+    }
+    window.location.href = "./pages/home.html";
 }
 
 // Función para logout
