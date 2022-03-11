@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, setDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDoc, getDocs, setDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDsVLa4Vcl_HpP7pniixu--ZJ25UsjuJ38",
@@ -24,16 +24,16 @@ let month = date.getMonth() + 1;
 let year = date.getFullYear();
 let today = "";
 
-if(month < 10){
+if (month < 10) {
     today = `${day}-0${month}-${year}`;
-  console.log(`${day}-0${month}-${year}`);
-}else{
+    console.log(`${day}-0${month}-${year}`);
+} else {
     today = `${day}-${month}-${year}`;
-  console.log(`${day}-${month}-${year}`);
+    console.log(`${day}-${month}-${year}`);
 }
 
 let currentUserEmail;
-
+// *****************************************************************************************************************************
 async function login() {
     signInWithPopup(auth, provider)
         .then((result) => {
@@ -44,16 +44,16 @@ async function login() {
             const user = result.user;
             //console.log(user);
             createUserFS(user);
-            
+
         }).catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
             console.log(errorCode);
         });
     await setPersistence(auth, browserLocalPersistence);
-    
-}
 
+}
+// *****************************************************************************************************************************
 // Crea el usuario en Firestore si no existe todavía
 let everyUser = [];
 async function createUserFS(user) {
@@ -84,7 +84,7 @@ async function logout() {
         console.log(error)
     });
 }
-
+// *****************************************************************************************************************************
 // Observador del estado de la sesión
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -94,14 +94,14 @@ onAuthStateChanged(auth, (user) => {
         }
         currentUserEmail = user.email;
         console.log(currentUserEmail);
-        let uid = user.uid;
-        // ...
+
+        printCanvas(auth.currentUser)
+
     } else {
         if (document.getElementById("username") != null) {
             let username = document.getElementById("username");
             username.innerHTML = "";
         }
-
     }
 })
 
@@ -130,4 +130,94 @@ if (googleLogout != null) {
         }
     });
 }
+// *****************************************************************************************************************************
+// Gráfica
+const canvas = document.getElementById("myChart");
+async function printCanvas(currentUser) {
+    const docRef = doc(db, "users", currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap.data().gameScore);
+    console.log(docSnap.data().dates);
+
+    const scores = docSnap.data().gameScore;
+    const scoresFirst = ["Scores"];
+    const scoresThen = scoresFirst.concat(scores);
+    const dates = docSnap.data().dates;
+    let indexOfScores = [];
+    scores.forEach((e, i) => {
+        //indexOfScores.push(`Attempt ${i + 1}`)
+        indexOfScores.push(dates[i])
+    })
+    console.log(indexOfScores);
+
+    if (indexOfScores.length < 5) {
+        indexOfScores = ["Game 1", "Game 2", "Game 3", "Game 4", "Game 5"]
+    }
+
+    const footer = (tooltipItems) => {
+        let datePoint;
+        
+        tooltipItems.forEach((e, i) => {
+          datePoint = dates[i];
+
+          i++;
+        });
+        return datePoint;
+      };
+
+    if (canvas != null) {
+
+        const labels = indexOfScores;
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Score',
+                backgroundColor: 'rgb(88, 29, 175)',
+                borderColor: 'rgb(88, 29, 175)',
+                data: scores,
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    
+                },
+                animations: {
+                    tension: {
+                      duration: 1000,
+                      easing: 'linear',
+                      from: 0.6,
+                      to: 0,
+                      loop: true
+                    }
+                  }
+                /* elements: {
+                    line: {
+                        tension: 0.5
+                    }
+                } */,
+                scales: {
+                    y: {
+                        suggestedMax: 10
+                    }
+                }
+            },
+        };
+
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    }
+}
+
+
 

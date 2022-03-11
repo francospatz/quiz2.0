@@ -34,13 +34,13 @@ const db = getFirestore();
 let quizForm = document.querySelector("#questions");
 let options = document.querySelectorAll(".choices");
 let label = document.querySelectorAll("label");
-let enunciado = quizForm.querySelector("#enunciado");
+let enunciado = document.querySelector("#enunciado");
 const questions = [];
 let currentUser;
 let currentUserEmail;
 let mensaje = document.querySelector(".mensaje")
 
-
+// *****************************************************************************************************************************
 let date = new Date();
 
 let day = date.getDate();
@@ -55,7 +55,7 @@ if(month < 10){
     today = `${day}-${month}-${year}`;
   console.log(`${day}-${month}-${year}`);
 }
-
+// *****************************************************************************************************************************
 let i = 0;
 let correctas = 0;
 
@@ -89,22 +89,40 @@ getQuestions().then(function () {
     }
     
     printoptions(i);
-    quizForm.addEventListener("click", function (e) {
-        e.preventDefault();
-        i++;
-        //console.log(questions[i].correcta);
-        console.log(correctas);
-        console.log("Esto tiene i ", i);
-        if (i <= 9) {
-            printitulo(i);
-            printoptions(i);
-        } else {
-            // alert("Terminaste");
-            message();
-            getScores(auth.currentUser);
-            //gamesArray(auth.currentUser);
-        }
+    label.forEach(lb => {
+        lb.addEventListener("click", function (e) {
+            e.preventDefault();
+            i++;
+            //console.log(questions[i].correcta);
+            console.log(correctas);
+            console.log("Esto tiene i ", i);
+            if (i <= 9) {
+                printitulo(i);
+                printoptions(i);
+            } else {
+                // alert("Terminaste");
+                message();
+                getScores(auth.currentUser);
+                //gamesArray(auth.currentUser);
+            }
+        });
     });
+    // quizForm.addEventListener("click", function (e) {
+    //     e.preventDefault();
+    //     i++;
+    //     //console.log(questions[i].correcta);
+    //     console.log(correctas);
+    //     console.log("Esto tiene i ", i);
+    //     if (i <= 9) {
+    //         printitulo(i);
+    //         printoptions(i);
+    //     } else {
+    //         // alert("Terminaste");
+    //         message();
+    //         getScores(auth.currentUser);
+    //         //gamesArray(auth.currentUser);
+    //     }
+    // });
 
     for (let i = 0; i < label.length; i++) {
         label[i].onclick = respuestas;
@@ -112,14 +130,14 @@ getQuestions().then(function () {
 
     function respuestas() {
         for (let i = 0; i < 10; i++) {
-            if (this.innerHTML == questions[i].correcta) {
+            if (label[i].innerHTML == questions[i].correcta) {
                 //alert("correcta");
                 correctas++;
             }
         }
     }
 });
-
+// *****************************************************************************************************************************
 // Actualizar el historial de partidas en firestore
 async function getScores (user) {
     let datesArray = [];
@@ -141,8 +159,8 @@ async function getScores (user) {
         gameScore: gameScoreArray
     })
 }
-
-
+// *****************************************************************************************************************************
+// Puntuación de la partida
 function message() {
     const FScore = document.getElementById("finalScore");
     const msg = document.getElementById("msg")
@@ -159,7 +177,7 @@ function message() {
     }
  
 }
-
+// *****************************************************************************************************************************
 onAuthStateChanged(auth, (user) => {
     if (user) {
         let username = document.getElementById("username");
@@ -203,7 +221,7 @@ if (googleLogout != null) {
     });
 }
 
-
+/* 
 // final score
 function printScore (points) {
     const finalScore = document.getElementById("score");
@@ -214,4 +232,4 @@ function printScore (points) {
 
 }
 
-
+ */
