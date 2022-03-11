@@ -119,7 +119,7 @@ input[type="email"] {
 #canvas-container{
   /* background-color: rgb(14, 97, 170); */
   position: relative;
-  height: 70% ;
+  height: 40%;
   width: 90%;
 } 
 
@@ -204,7 +204,7 @@ header > nav > img {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: red;
+  /* background-color: red; */
 }
 .principal2 > #questoion-div {
   display: flex;
@@ -217,6 +217,11 @@ header > nav > img {
   background-color: #fafbff;
   color: #5c5c5c;
 }
+
+.welcome {
+  color: #272727;
+}
+
 label {
   display: flex;
   justify-content: center;
@@ -239,6 +244,11 @@ label:hover {
 input[type="radio"] {
   display: none;
 }
+.principal3>p{
+  font-size:14px;
+  text-align: center;
+  margin:1em 0em;
+}
 #options-div {
   /* background-color: #fc00ff;  */
   display: flex;
@@ -256,20 +266,31 @@ input[type="radio"] {
   z-index : 50;
   position: absolute;
   border-radius: 8px;
+  /* margin-top: auto;
+  margin-bottom: auto; */
   display: none;
+  /* margin-bottom: 6rem; */
   justify-content: center;
   align-items: center;
   flex-direction:column;
   color: rgb(109, 8, 168);
-  transition: all 2s linear;
+  transition: all 0.6s linear;
   
 }
 .mensaje{
   text-align: center;
   font-size: 30px;
 }
-
-
+#finalScore{
+  font-weight: 800;
+  font-size: 70px;
+  margin-top: 0px;
+  color:rgb(39, 12, 61);
+  transform: rotate(8deg);
+}
+#finalScore::first-letter{
+  color: rgb(180, 60, 216);
+}
 #score {
   font-size: 100px;
 }
@@ -291,7 +312,7 @@ input[type="radio"] {
   color: rgb(119, 119, 119);
 }
 #username{
-  color: black
+  color: rgb(61, 61, 61)
 }
 #punto{
   background-color: #43802b;
@@ -301,7 +322,7 @@ input[type="radio"] {
 }
 
 /*----------------MEDIA-QUERYS---------------------  */
-@media only screen and (min-width: 700px) {
+@media only screen and (min-width: 400px) {
   .principal2 {
     width: 60%;
   }
@@ -310,7 +331,7 @@ input[type="radio"] {
   }
  
   .principal3 {
-    width:40%;
+    width:70%;
     padding: 0;
     justify-content: space-around; 
   }
@@ -329,6 +350,7 @@ input[type="radio"] {
   border-radius: 8px;
   
   }
+  
   #questions {
     width: 100%;
     height: 100%;
@@ -350,7 +372,20 @@ input[type="radio"] {
   }
   #canvas-container{
     position: relative;
-  
+    height: auto ;
   } 
+  .principal3>p{
+    font-size:18px;
+    text-align: center;
+    margin:0.2em 0em;
+  }
   
+}
+@media only screen and (min-width: 900px) {
+
+  .principal3 {
+    width:50%;
+    padding: 0;
+    justify-content: space-around; 
+  }
 }

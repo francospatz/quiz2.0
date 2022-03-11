@@ -58,10 +58,11 @@ if(month < 10){
 // *****************************************************************************************************************************
 let i = 0;
 let correctas = 0;
+let currentQuestion;
 
 async function getQuestions() {
     const reponse = await fetch(
-        "https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple"
+        "https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple"
     );
     const data = await reponse.json();
     const choice = await data.results.map((e) => {
@@ -72,12 +73,12 @@ async function getQuestions() {
         });
         
     });
-    console.log(questions)
+    // console.log(questions)
 }
 getQuestions().then(function () {
     let rand = [0, 1, 2, 3];
-    function printitulo(inc) {
-         enunciado.innerHTML = `${questions[inc].cuestion}`;
+    function printitulo(i) {
+         enunciado.innerHTML = `${questions[i].cuestion}`;
     }
     printitulo(i);
     
@@ -85,15 +86,21 @@ getQuestions().then(function () {
         rand.sort(function () {
             return Math.random() - 0.5;
         });
-        label[0].innerHTML = `${questions[inc].listQuest[rand[0]]}`;
-        label[1].innerHTML = `${questions[inc].listQuest[rand[1]]}`;
-        label[2].innerHTML = `${questions[inc].listQuest[rand[2]]}`;
-        label[3].innerHTML = `${questions[inc].listQuest[rand[3]]}`;
+        label[0].innerHTML = `${questions[i].listQuest[rand[0]]}`;
+        label[1].innerHTML = `${questions[i].listQuest[rand[1]]}`;
+        label[2].innerHTML = `${questions[i].listQuest[rand[2]]}`;
+        label[3].innerHTML = `${questions[i].listQuest[rand[3]]}`;
 
-        console.log("Printa la pregunta Numero :",inc);
+        console.log("Printa la pregunta Numero :",i);
     }
     
     printoptions(i);
+    
+    console.log(currentQuestion);
+    label.forEach(lb => {
+        lb.addEventListener("click", validate)
+        
+    });
     // label.forEach(lb => { lb.addEventListener("click", validate(e))}
           
     //     //     e.preventDefault();
@@ -144,9 +151,20 @@ getQuestions().then(function () {
         if (this.innerHTML == questions[i].correcta) {
             console.log("correcta");
             correctas++;
+            
         } else {
             console.log("Incorrecta");
         }
+        i++;
+        if (i <= 9) {
+            printitulo(i);
+            printoptions(i);
+        } else {
+            // alert("Terminaste");
+            message();
+            getScores(auth.currentUser);
+            //gamesArray(auth.currentUser);
+        }  
  }
     
     
@@ -188,16 +206,16 @@ async function getScores (user) {
 function message() {
     const FScore = document.getElementById("finalScore");
     const msg = document.getElementById("msg")
-    mensaje.style.display = "block";
+    mensaje.style.display = "flex";
     if (correctas<5) {
         msg.innerHTML="You Johnny 'Weak'"
-        FScore.innerHTML = correctas + " /10";
+        FScore.innerHTML = correctas + " / 10";
     } else if (correctas>=5 && correctas <8) {
         msg.innerHTML="You 'Beyon' C "
-        FScore.innerHTML = correctas + " /10";
+        FScore.innerHTML = correctas + " / 10";
     } else {
         msg.innerHTML="You 'The Rock' "
-        FScore.innerHTML = correctas + " /10";
+        FScore.innerHTML = correctas + " / 10";
     }
  
 }
@@ -255,5 +273,5 @@ function printScore (points) {
     }
 
 }
-
  */
+
