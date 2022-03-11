@@ -70,14 +70,17 @@ async function getQuestions() {
             correcta: e.correct_answer,
             listQuest: [...e.incorrect_answers, e.correct_answer],
         });
+        
     });
+    console.log(questions)
 }
 getQuestions().then(function () {
     let rand = [0, 1, 2, 3];
     function printitulo(inc) {
-        enunciado.innerHTML = `${questions[inc].cuestion}`;
+         enunciado.innerHTML = `${questions[inc].cuestion}`;
     }
     printitulo(i);
+    
     function printoptions(inc) {
         rand.sort(function () {
             return Math.random() - 0.5;
@@ -86,33 +89,37 @@ getQuestions().then(function () {
         label[1].innerHTML = `${questions[inc].listQuest[rand[1]]}`;
         label[2].innerHTML = `${questions[inc].listQuest[rand[2]]}`;
         label[3].innerHTML = `${questions[inc].listQuest[rand[3]]}`;
+
+        console.log("Printa la pregunta Numero :",inc);
     }
     
     printoptions(i);
-    label.forEach(lb => {
-        lb.addEventListener("click", function (e) {
-            e.preventDefault();
-            i++;
-            //console.log(questions[i].correcta);
-            console.log(correctas);
-            console.log("Esto tiene i ", i);
-            if (i <= 9) {
-                printitulo(i);
-                printoptions(i);
-            } else {
-                // alert("Terminaste");
-                message();
-                getScores(auth.currentUser);
-                //gamesArray(auth.currentUser);
-            }
-        });
-    });
+    // label.forEach(lb => { lb.addEventListener("click", validate(e))}
+          
+    //     //     e.preventDefault();
+    //     //     console.log("Esto tiene i ", i);
+    //     //     i++;
+    //     //     //console.log(questions[i].correcta);
+            
+    //     //     if (i <= 9) {
+    //     //         printitulo(i);
+    //     //         printoptions(i);
+    //     //     } else {
+    //     //         // alert("Terminaste");
+    //     //         message();
+    //     //         getScores(auth.currentUser);
+    //     //         //gamesArray(auth.currentUser);
+    //     //     }
+
+            
+    //    });
+    //  });
+    //-----------------------------------------------------------------------------------------------
     // quizForm.addEventListener("click", function (e) {
     //     e.preventDefault();
-    //     i++;
+    //     // i++;
     //     //console.log(questions[i].correcta);
-    //     console.log(correctas);
-    //     console.log("Esto tiene i ", i);
+    //     console.log("pregunta numero :  ", i);
     //     if (i <= 9) {
     //         printitulo(i);
     //         printoptions(i);
@@ -122,20 +129,37 @@ getQuestions().then(function () {
     //         getScores(auth.currentUser);
     //         //gamesArray(auth.currentUser);
     //     }
+    //     i++
     // });
-
-    for (let i = 0; i < label.length; i++) {
-        label[i].onclick = respuestas;
-    }
-
-    function respuestas() {
-        for (let i = 0; i < 10; i++) {
-            if (label[i].innerHTML == questions[i].correcta) {
-                //alert("correcta");
-                correctas++;
-            }
+//---------------------------------------------------
+    // function siguiente() {
+    //     for (let i = 0; i < label.length; i++) {
+    //         label[i].onclick = respuestas;
+           
+    //     }
+    // }
+     
+//--------------------------------------------------------
+    function validate() {
+        if (this.innerHTML == questions[i].correcta) {
+            console.log("correcta");
+            correctas++;
+        } else {
+            console.log("Incorrecta");
         }
-    }
+ }
+    
+    
+//---------------------------------------------------------
+    // function respuestas() {
+    //      for (let i = 0; i < 10; i++) {
+    //         console.log("Correctaaaaa",questions[i].correcta)
+    //         if (this.innerHTML == questions[i].correcta) {
+    //             console.log("clicado : ",this.innerHTML);
+    //             correctas++;
+    //         }
+    //      }
+    // }
 });
 // *****************************************************************************************************************************
 // Actualizar el historial de partidas en firestore
