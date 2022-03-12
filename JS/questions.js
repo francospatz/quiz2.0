@@ -48,12 +48,12 @@ let month = date.getMonth() + 1;
 let year = date.getFullYear();
 let today;
 
-if(month < 10){
+if (month < 10) {
     today = `${day}-0${month}-${year}`;
-  console.log(`${day}-0${month}-${year}`);
-}else{
+    console.log(`${day}-0${month}-${year}`);
+} else {
     today = `${day}-${month}-${year}`;
-  console.log(`${day}-${month}-${year}`);
+    console.log(`${day}-${month}-${year}`);
 }
 // *****************************************************************************************************************************
 let i = 0;
@@ -71,17 +71,17 @@ async function getQuestions() {
             correcta: e.correct_answer,
             listQuest: [...e.incorrect_answers, e.correct_answer],
         });
-        
+
     });
     // console.log(questions)
 }
 getQuestions().then(function () {
     let rand = [0, 1, 2, 3];
     function printitulo(i) {
-         enunciado.innerHTML = `${questions[i].cuestion}`;
+        enunciado.innerHTML = `${questions[i].cuestion}`;
     }
     printitulo(i);
-    
+
     function printoptions(inc) {
         rand.sort(function () {
             return Math.random() - 0.5;
@@ -91,67 +91,23 @@ getQuestions().then(function () {
         label[2].innerHTML = `${questions[i].listQuest[rand[2]]}`;
         label[3].innerHTML = `${questions[i].listQuest[rand[3]]}`;
 
-        console.log("Printa la pregunta Numero :",i);
+        console.log("Printa la pregunta Numero :", i);
     }
-    
+
     printoptions(i);
-    
+
     console.log(currentQuestion);
     label.forEach(lb => {
         lb.addEventListener("click", validate)
-        
-    });
-    // label.forEach(lb => { lb.addEventListener("click", validate(e))}
-          
-    //     //     e.preventDefault();
-    //     //     console.log("Esto tiene i ", i);
-    //     //     i++;
-    //     //     //console.log(questions[i].correcta);
-            
-    //     //     if (i <= 9) {
-    //     //         printitulo(i);
-    //     //         printoptions(i);
-    //     //     } else {
-    //     //         // alert("Terminaste");
-    //     //         message();
-    //     //         getScores(auth.currentUser);
-    //     //         //gamesArray(auth.currentUser);
-    //     //     }
 
-            
-    //    });
-    //  });
-    //-----------------------------------------------------------------------------------------------
-    // quizForm.addEventListener("click", function (e) {
-    //     e.preventDefault();
-    //     // i++;
-    //     //console.log(questions[i].correcta);
-    //     console.log("pregunta numero :  ", i);
-    //     if (i <= 9) {
-    //         printitulo(i);
-    //         printoptions(i);
-    //     } else {
-    //         // alert("Terminaste");
-    //         message();
-    //         getScores(auth.currentUser);
-    //         //gamesArray(auth.currentUser);
-    //     }
-    //     i++
-    // });
-//---------------------------------------------------
-    // function siguiente() {
-    //     for (let i = 0; i < label.length; i++) {
-    //         label[i].onclick = respuestas;
-           
-    //     }
-    // }
-     
-//--------------------------------------------------------
+    });
+
+    //--------------------------------------------------------
     function validate() {
         if (this.innerHTML == questions[i].correcta) {
             console.log("correcta");
             correctas++;
-            
+
         } else {
             console.log("Incorrecta");
         }
@@ -164,24 +120,12 @@ getQuestions().then(function () {
             message();
             getScores(auth.currentUser);
             //gamesArray(auth.currentUser);
-        }  
- }
-    
-    
-//---------------------------------------------------------
-    // function respuestas() {
-    //      for (let i = 0; i < 10; i++) {
-    //         console.log("Correctaaaaa",questions[i].correcta)
-    //         if (this.innerHTML == questions[i].correcta) {
-    //             console.log("clicado : ",this.innerHTML);
-    //             correctas++;
-    //         }
-    //      }
-    // }
+        }
+    }
 });
 // *****************************************************************************************************************************
 // Actualizar el historial de partidas en firestore
-async function getScores (user) {
+async function getScores(user) {
     let datesArray = [];
     let gameScoreArray = [];
 
@@ -193,7 +137,7 @@ async function getScores (user) {
 
     gameScoreArray = docSnap.data().gameScore;
     gameScoreArray.push(correctas);
-    
+
     await setDoc(doc(db, "users", user.uid), {
         displayName: user.displayName,
         email: user.email,
@@ -207,17 +151,17 @@ function message() {
     const FScore = document.getElementById("finalScore");
     const msg = document.getElementById("msg")
     mensaje.style.display = "flex";
-    if (correctas<5) {
-        msg.innerHTML="You Johnny 'Weak'"
+    if (correctas < 5) {
+        msg.innerHTML = "You Johnny 'Weak'"
         FScore.innerHTML = correctas + " / 10";
-    } else if (correctas>=5 && correctas <8) {
-        msg.innerHTML="You 'Beyon' C "
+    } else if (correctas >= 5 && correctas < 8) {
+        msg.innerHTML = "You 'Beyon' C "
         FScore.innerHTML = correctas + " / 10";
     } else {
-        msg.innerHTML="You 'The Rock' "
+        msg.innerHTML = "You 'The Rock' "
         FScore.innerHTML = correctas + " / 10";
     }
- 
+
 }
 // *****************************************************************************************************************************
 onAuthStateChanged(auth, (user) => {
@@ -262,16 +206,3 @@ if (googleLogout != null) {
         }
     });
 }
-
-/* 
-// final score
-function printScore (points) {
-    const finalScore = document.getElementById("score");
-
-    if (finalScore != null) {
-        finalScore.innerHTML = points + "/10"
-    }
-
-}
- */
-
