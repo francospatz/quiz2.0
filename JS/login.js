@@ -73,7 +73,7 @@ async function createUserFS(user) {
     if (everyUser.includes(user.uid) == false) {
         await setDoc(doc(db, "users", user.uid), docData2);
     }
-    window.location.href = "/pages/home.html";
+    window.location.href = "./pages/home.html";
 }
 
 // Función para logout
